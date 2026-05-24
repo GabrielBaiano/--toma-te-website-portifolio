@@ -21,29 +21,36 @@ const fragShader = `
   varying vec3 vNormal;
   varying vec4 vScreenPos;
 
-  // 4x4 Bayer Matrix for Ordered Dithering
+  // 4x4 Bayer Matrix for Ordered Dithering (Float-only for cross-device compatibility)
   float bayer4x4(vec2 p) {
     vec2 pos = floor(mod(p, 4.0));
-    int x = int(pos.x);
-    int y = int(pos.y);
-    int index = x + y * 4;
+    float x = pos.x;
+    float y = pos.y;
     
-    if (index == 0) return 0.0625;
-    if (index == 1) return 0.5625;
-    if (index == 2) return 0.1875;
-    if (index == 3) return 0.6875;
-    if (index == 4) return 0.8125;
-    if (index == 5) return 0.3125;
-    if (index == 6) return 0.9375;
-    if (index == 7) return 0.4375;
-    if (index == 8) return 0.25;
-    if (index == 9) return 0.75;
-    if (index == 10) return 0.125;
-    if (index == 11) return 0.625;
-    if (index == 12) return 1.0;
-    if (index == 13) return 0.5;
-    if (index == 14) return 0.875;
-    if (index == 15) return 0.375;
+    if (y == 0.0) {
+      if (x == 0.0) return 0.0625;
+      if (x == 1.0) return 0.5625;
+      if (x == 2.0) return 0.1875;
+      if (x == 3.0) return 0.6875;
+    }
+    if (y == 1.0) {
+      if (x == 0.0) return 0.8125;
+      if (x == 1.0) return 0.3125;
+      if (x == 2.0) return 0.9375;
+      if (x == 3.0) return 0.4375;
+    }
+    if (y == 2.0) {
+      if (x == 0.0) return 0.25;
+      if (x == 1.0) return 0.75;
+      if (x == 2.0) return 0.125;
+      if (x == 3.0) return 0.625;
+    }
+    if (y == 3.0) {
+      if (x == 0.0) return 1.0;
+      if (x == 1.0) return 0.5;
+      if (x == 2.0) return 0.875;
+      if (x == 3.0) return 0.375;
+    }
     return 0.0;
   }
 
